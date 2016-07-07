@@ -35,7 +35,6 @@ class Parks extends Component {
 
 
     render() {
-        console.log("parks render");
         return (
             <View style={{ marginBottom: 60, flex: 1 }}>
                 <ListView dataSource={this.state.dataSource}
@@ -91,7 +90,6 @@ class Parks extends Component {
         });
         // let favorates = this.state.favorates.concat([parkId]);
         // var newParks = JSON.parse(JSON.stringify(this.state.parks));
-        // debugger;
         // var park = newParks.find((i) => parseInt(i._id) == parkId);
         // park.like = !park.like;
         // this.setState({
@@ -101,7 +99,8 @@ class Parks extends Component {
     }
 
     onRightButtonPress(park) {
-        let favorates = this.state.favorates.concat([parseInt(park._id)]);
+
+        let favorates = this.toggleFavorate(parseInt(park._id));
         let index = this.state.parks.findIndex(p => p._id == park._id);
         let newParks = this.state.parks.slice();
         let newPark = JSON.parse(JSON.stringify(park));
@@ -121,6 +120,18 @@ class Parks extends Component {
         route.rightButtonTitle = "已收藏";
         route.title = "已收藏";
         this.props.navigator.replace(route);
+    }
+
+    toggleFavorate(parkId) {
+        var isFavorate = this.isFavorate(parkId);
+        var favorates = this.state.favorates;
+        if (!isFavorate) {
+            return favorates.concat(parkId);
+        }
+        var index = favorates.findIndex(x => x == parkId);
+        favorates.splice(index, 1);
+        return favorates;
+
     }
 
     getNextPage() {
