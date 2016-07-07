@@ -19,7 +19,8 @@ class Layout extends Component {
                     <NavigatorIOS initialRoute={{
                         component: Parks, title:"公園清單"
                     }}
-                        style={{height: 20, flex: 1}}
+                        style={{ height: 20, flex: 1 }}
+
                         ></NavigatorIOS>
                 </TabBarIOS.Item>
                 <TabBarIOS.Item title="Settings" style={styles.container}

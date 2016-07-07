@@ -17,10 +17,23 @@ class Park extends Component {
                 subtitle: park.Location
             }
         ];
+        ;
+        var isFavorate = this.props.isFavorate(parseInt(park._id));
         return (
             <ScrollView style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 30 }}>{park.ParkName}</Text>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                        <Text style={{ fontSize: 30 }}>{park.ParkName}</Text>
+                        <View style={{
+                            flex: 1, flexDirection: 'row', alignItems: 'flex-end',
+                    justifyContent: 'flex-end'    }}>
+                            <Text style={{
+                                alignItems: 'flex-end', justifyContent: 'flex-end',
+                                alignSelf: 'flex-end'
+                            }}>{ isFavorate ? "已收藏" : "" }</Text>
+                        </View>
+
+                    </View>
                     <Text>{park.Introduction }</Text>
                     <Image source={{ uri: park.Image }} style={{
                         width: 200, height: 200,
@@ -45,6 +58,7 @@ class Park extends Component {
     getDesc() {
         return this.props.park.Introduction.replace(/(?:\r\n|\r|\n)/g, '<br />');
     }
+
 }
 
 export default Park;

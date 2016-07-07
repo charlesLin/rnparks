@@ -14,6 +14,7 @@ class ParksService {
             },
         }).then(resp => {
             let json = resp.json();
+            console.log(json);
             if (resp.status >= 200 && resp.status < 300) {
                 return json;
             }
