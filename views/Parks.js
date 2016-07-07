@@ -3,6 +3,8 @@ import { View, Text, ListView, ActivityIndicator, StyleSheet,
     TouchableHighlight, TouchableOpacity} from 'react-native';
 import ParksService from '../services/ParksService';
 import Park from './Park';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 class Parks extends Component {
     constructor(props) {
@@ -52,13 +54,18 @@ class Parks extends Component {
 
     renderRow(row) {
         var isFavorate = this.state.favorates.indexOf(parseInt(row._id)) > -1;
-        console.log("parks renderRow, id=", row._id, isFavorate);
+        const myIcon = isFavorate ? (<Icon name="heart" size={20} color="#900"
+            style={{
+                alignSelf: 'flex-end', alignItems: 'flex-end',
+                justifyContent: 'flex-end'
+            }} />)
+            : null;
         return (
             <TouchableHighlight onPress={this.pressRow.bind(this, row) }
                 underlayColor="grey" activeOpacity={0.5}>
-                <View style={{ margin: 10 }}>
-                    <Text style={{ height: 20 }}>{row._id}   {row.ParkName} {isFavorate ? "Like" : ""}</Text>
-
+                <View style={{ margin: 10, flex: 1, flexDirection: 'row' }}>
+                    <Text style={{ height: 20, flex: 1 }}>{row._id}   {row.ParkName}</Text>
+                    {  myIcon }
                 </View>
             </TouchableHighlight>);
     }
@@ -83,7 +90,7 @@ class Parks extends Component {
             component: Park,
             passProps: {
                 park: row,
-                isFavorate : this.isFavorate.bind(this)
+                isFavorate: this.isFavorate.bind(this)
             },
             rightButtonTitle: title,
             onRightButtonPress: this.onRightButtonPress.bind(this, row)
