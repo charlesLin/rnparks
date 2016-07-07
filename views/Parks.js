@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { View, Text, ListView, ActivityIndicator, StyleSheet,
-    TouchableHighlight, TouchableOpacity} from 'react-native';
+    TouchableHighlight, TouchableOpacity, Alert} from 'react-native';
 import ParksService from '../services/ParksService';
 import Park from './Park';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -33,9 +33,6 @@ class Parks extends Component {
         this.getNextPage();
     }
 
-
-
-
     render() {
         return (
             <View style={{ marginBottom: 60, flex: 1 }}>
@@ -53,6 +50,7 @@ class Parks extends Component {
     }
 
     renderRow(row) {
+        console.log('render row ', row._id);
         var isFavorate = this.state.favorates.indexOf(parseInt(row._id)) > -1;
         const myIcon = isFavorate ? (<Icon name="heart" size={20} color="#900"
             style={{
@@ -106,9 +104,48 @@ class Parks extends Component {
     }
 
     onRightButtonPress(park) {
+        var parkId = parseInt(park._id);
+        var isFavorate = this.isFavorate(parkId);
+        if (!isFavorate) {
+            let favorates = this.addToFavorates(parkId);
 
-        let favorates = this.toggleFavorate(parseInt(park._id));
-        let index = this.state.parks.findIndex(p => p._id == park._id);
+            //let favorates = this.toggleFavorate(parkId);
+            this.updateFavoratesToUI.call(this, favorates, parkId, park);
+            return;
+        }
+
+        Alert.alert(
+            '警告',
+            '確定移除收藏？',
+            [
+                { text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                {
+                    text: '確定', onPress: () => {
+                        let favorates = this.state.favorates;
+                        var index = favorates.findIndex(x => x == parkId);
+                        favorates.splice(index, 1);
+                        this.updateFavoratesToUI.call(this, favorates, parkId, park);
+                    }
+                },
+            ]
+        );
+
+
+
+        // var newParks = JSON.parse(JSON.stringify(this.state.parks));
+        // this.setState({
+        //     favorates: favoratÏes,
+        //     dataSource: this.state.dataSource.cloneWithRows(newParks)
+        // });
+
+        // var route = this.props.navigator.navigationContext.currentRoute;
+        // route.rightButtonTitle = "已收藏";
+        // route.title = "已收藏";
+        // this.props.navigator.replace(route);
+    }
+
+    updateFavoratesToUI(favorates, parkId, park) {
+        let index = this.state.parks.findIndex(p => p._id == parkId);
         let newParks = this.state.parks.slice();
         let newPark = JSON.parse(JSON.stringify(park));
         newParks[index] = newPark;
@@ -117,16 +154,15 @@ class Parks extends Component {
             dataSource: this.state.dataSource.cloneWithRows(newParks)
         });
 
-        // var newParks = JSON.parse(JSON.stringify(this.state.parks));
-        // this.setState({
-        //     favorates: favoratÏes,
-        //     dataSource: this.state.dataSource.cloneWithRows(newParks)
-        // });
-
         var route = this.props.navigator.navigationContext.currentRoute;
         route.rightButtonTitle = "已收藏";
         route.title = "已收藏";
         this.props.navigator.replace(route);
+    }
+
+    addToFavorates(parkId) {
+        var favorates = this.state.favorates;
+        return favorates.concat(parkId)
     }
 
     toggleFavorate(parkId) {
@@ -135,9 +171,9 @@ class Parks extends Component {
         if (!isFavorate) {
             return favorates.concat(parkId);
         }
-        var index = favorates.findIndex(x => x == parkId);
-        favorates.splice(index, 1);
-        return favorates;
+
+
+
 
     }
 
