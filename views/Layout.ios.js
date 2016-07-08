@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { View, Text, TabBarIOS, StyleSheet, NavigatorIOS } from 'react-native';
 import Parks from './Parks';
+import Demo from './Demo';
 
 class Layout extends Component {
     constructor(props) {
@@ -17,7 +18,8 @@ class Layout extends Component {
                     onPress={ () => { this.setState({ selectedTab: "Parks" }) } }
                     selected={this.state.selectedTab === "Parks"}>
                     <NavigatorIOS initialRoute={{
-                        component: Parks, title:"公園清單"
+                        component: Parks,
+                        title: "公園清單"
                     }}
                         style={{ height: 20, flex: 1 }}
 
@@ -37,7 +39,7 @@ class Layout extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 20
+        //marginTop: 20
     }
 });
 
