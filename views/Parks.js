@@ -4,18 +4,16 @@ import { View, Text, ListView, ActivityIndicator, StyleSheet,
 import ParksService from '../services/ParksService';
 import Park from './Park';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FavorateService from '../services/FavorateService';
 
 
 class Parks extends Component {
     constructor(props) {
         super(props);
         var ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => {
-                var bi = r1 !== r2;
-                console.log(r1.ParkName, r1._id, bi);
-                return bi;
-            }
+            rowHasChanged: (r1, r2) => r1 !== r2
         });
+        this.favorateService = new FavorateService();
         this.state = {
             parks: [],
             dataSource: ds.cloneWithRows([]),
@@ -23,7 +21,7 @@ class Parks extends Component {
             pageSize: 10,
             totalCount: null,
             isLoading: false,
-            favorates: [],
+            favorates: this.favorateService.getAll(),
             isReloading : false
         };
 
@@ -53,8 +51,7 @@ class Parks extends Component {
     }
 
     renderRow(row) {
-        console.log('render row ', row._id);
-        var isFavorate = this.state.favorates.indexOf(parseInt(row._id)) > -1;
+        var isFavorate = this.favorateService.contains(parseInt(row._id));
         const myIcon = isFavorate ? (<Icon name="heart" size={20} color="#900"
             style={{
                 alignSelf: 'flex-end', alignItems: 'flex-end',
@@ -80,7 +77,7 @@ class Parks extends Component {
 
 
     isFavorate(parkId) {
-        return this.state.favorates.indexOf(parkId) > -1;
+        return this.favorateService.contains(parkId);
     }
 
     pressRow(row) {
@@ -112,7 +109,6 @@ class Parks extends Component {
         if (!isFavorate) {
             let favorates = this.addToFavorates(parkId);
 
-            //let favorates = this.toggleFavorate(parkId);
             this.updateFavoratesToUI.call(this, favorates, parkId, park);
             return;
         }
@@ -124,9 +120,8 @@ class Parks extends Component {
                 { text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
                 {
                     text: '確定', onPress: () => {
-                        let favorates = this.state.favorates;
-                        var index = favorates.findIndex(x => x == parkId);
-                        favorates.splice(index, 1);
+                        this.favorateService.remove(parkId);
+                        var favorates = this.favorateService.getAll();
                         this.updateFavoratesToUI.call(this, favorates, parkId, park);
                     }
                 },
@@ -164,20 +159,8 @@ class Parks extends Component {
     }
 
     addToFavorates(parkId) {
-        var favorates = this.state.favorates;
-        return favorates.concat(parkId)
-    }
-
-    toggleFavorate(parkId) {
-        var isFavorate = this.isFavorate(parkId);
-        var favorates = this.state.favorates;
-        if (!isFavorate) {
-            return favorates.concat(parkId);
-        }
-
-
-
-
+        this.favorateService.add(parkId);
+        return this.favorateService.getAll();
     }
 
     getNextPage() {
