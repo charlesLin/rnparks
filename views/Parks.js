@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { View, Text, ListView, ActivityIndicator, StyleSheet,
-    TouchableHighlight, TouchableOpacity, Alert} from 'react-native';
+    TouchableHighlight, TouchableOpacity, Alert, RefreshControl} from 'react-native';
 import ParksService from '../services/ParksService';
 import Park from './Park';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -23,7 +23,8 @@ class Parks extends Component {
             pageSize: 10,
             totalCount: null,
             isLoading: false,
-            favorates: []
+            favorates: [],
+            isReloading : false
         };
 
 
@@ -43,6 +44,8 @@ class Parks extends Component {
                     renderSeparator={(sectioId, rowId) => <View key={rowId} style={styles.separator} />}
                     pageSize={100}
                     enableEmptySections={true}
+                    refreshControl={<RefreshControl refreshing={this.state.isReloading}
+                        onRefresh={this.getNextPage.bind(this)}  /> }
                     >
                 </ListView>
             </View>
