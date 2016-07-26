@@ -3,6 +3,7 @@ import { View, Text, TabBarIOS, StyleSheet, NavigatorIOS } from 'react-native';
 import Parks from './Parks';
 import Demo from './Demo';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import BarCode from './BarCode';
 
 class Layout extends Component {
     constructor(props) {
@@ -33,8 +34,12 @@ class Layout extends Component {
                     selected={this.state.selectedTab === "Settings"}
                     iconName="cog"
                     >
-                    <View>
-                        <Text>Settings</Text>
+                    <View style={{flex:1, alignItems: 'center'}}>
+                        <BarCode style={{ marginTop: 20 }} value={"1234567890"}
+                            width={225}
+                            height={170}
+                            bgColor="#e7e7eb"
+                            />
                     </View>
                 </Icon.TabBarItemIOS>
             </TabBarIOS>
