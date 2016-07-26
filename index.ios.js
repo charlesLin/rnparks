@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import Layout from './views/Layout';
+import App from './views/App';
 import {
   AppRegistry,
   StyleSheet,
@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('parks', () => Layout);
+AppRegistry.registerComponent('parks', () => App);
